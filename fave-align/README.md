@@ -2,7 +2,7 @@
 
 ### Preprocess the .srt/.txt file with
 	
-	python3 srt2fave.py /path/to/input /path/to/output
+	python3 srt2fave.py /path/to/input /path/to/output.txt
 
 ### Build the docker container via
 
@@ -16,8 +16,8 @@
 You should be located in `~/htk/FAVE/FAVE-align`. Note the use of Python 2.
 
 	cp /root/work/*.wav .
-	cp /root/work/*.srt .
-	python2 FAAValign.py audio.wav subtitles.srt output.TextGrid
+	cp /root/work/*.txt .
+	python2 FAAValign.py audio.wav transcript.txt output.TextGrid
 
 You will be asked to provide pronunciation for unknown words, but you can probably just skip this. After that the algorithm should run fine (takes 6-8 minutes on an hour long clip). You can then copy it back to the mounted directory with.
 
@@ -27,4 +27,4 @@ After this, you should exit out of the docker container.
 
 ### Postprocess the TextGrid file with
 
-	python3 textgrid2srt.py /path/to/mounted/dir/ /path/to/output
+	python3 textgrid2srt.py /path/to/input/output.TextGrid /path/to/output
