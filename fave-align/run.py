@@ -55,7 +55,7 @@ def clean_transcript(input_transcript, input_media, onset=None, offset=None):
             if onset is None or offset is None:
                 raise Exception("Onset and offset must be declared")
             txt = TextStim(input_transcript)
-            _clean_save(txt.text, new_file, onset, stim.duration - int(offset))
+            _clean_save(txt.text, new_file, onset, stim.duration - offset)
 
     return clean_transcript, input_media
 
@@ -83,9 +83,9 @@ def parse_textgrid(transcript_path):
 @click.argument('input_transcript')
 @click.argument('input_media')
 @click.argument('output_file')
-@click.option('--onset',
+@click.option('--onset', type=int,
               help='Onset of first word. Only for .txt files.')
-@click.option('--offset',
+@click.option('--offset', type=int,
               help='Offset from the end of stimulus. Only for .txt files.')
 def run_fave(input_transcript, input_media, output_file,
              onset=None, offset=None):
