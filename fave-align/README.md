@@ -1,30 +1,12 @@
 # How to use FAVE-align
 
-### Preprocess the .srt/.txt file with
-	
-	python3 srt2fave.py /path/to/input /path/to/output.txt
+@## Make docker image
+`docker build . -t alignment`
 
-### Build the docker container via
+### Run using Docker
 
-	docker build -t alignment .
+`docker run -v /host/dir:/data -it --rm alignment /data/transcript.txt /data/media.avi /data/out.txt`
 
-### Run the docker container, mounting the directory with the desired WAV and .srt/.txt files
+This command accepts either `.srt` or `.txt` files as transcripts. The latter is assumed to be a single text chunk for the whole audio.
 
-	docker run --rm -v /path/to/input:/root/work/ -it alignment
-
-### Once in the container, run the following commands
-You should be located in `~/htk/FAVE/FAVE-align`. Note the use of Python 2.
-
-	cp /root/work/*.wav .
-	cp /root/work/*.txt .
-	python2 FAAValign.py audio.wav transcript.txt output.TextGrid
-
-You will be asked to provide pronunciation for unknown words, but you can probably just skip this. After that the algorithm should run fine (takes 6-8 minutes on an hour long clip). You can then copy it back to the mounted directory with.
-
-	cp output.TextGrid /root/work/
-
-After this, you should exit out of the docker container.
-
-### Postprocess the TextGrid file with
-
-	python3 textgrid2srt.py /path/to/input/output.TextGrid /path/to/output
+Also, for the media, you can pass either an audio or video file, and pliers will extract the audio.
