@@ -1,7 +1,15 @@
-''' Utility code for converting SRT files to FAVE-align input files '''
+''' Utility code for converting SRT or txt files to FAVE-align input files '''
 import re
 import sys
-from pliers.stimuli import ComplexTextStim
+from pliers.stimuli import ComplexTextStim, load_stims, AudioStim
+from pliers.converts import VideoToAudioConverter
+
+
+def run_fave(input_file, input_media, output_file):
+	stim = load_stims([input_media])[0]
+	if not isinstance(stim, AudioStim):
+		conv = VideotoAudioConverter()
+		
 
 
 def clean_transcript(input_file, output_file):
@@ -31,5 +39,6 @@ def clean_transcript(input_file, output_file):
 
 if __name__ == '__main__':
     input_file = sys.argv[1]
+    input_media = sys.argv[1]
     output_file = sys.argv[2]
-    clean_transcript(input_file, output_file)
+    run_fave(input_file, input_media, output_file)
