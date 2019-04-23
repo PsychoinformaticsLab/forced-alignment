@@ -1,6 +1,6 @@
 """ Utility code for converting SRT or txt files to FAVE-align input files """
 import re
-import sys
+import click
 from os.path import splitext
 import subprocess
 from pliers.stimuli import ComplexTextStim, load_stims, AudioStim, TextStim
@@ -32,7 +32,7 @@ def _clean_save(filtered, new_file, onset, duration):
                                               filtered))
 
 
-def clean_transcript(input_transcript, input_media):
+def clean_transcript(input_transcript, input_media, onset=0):
     stim = load_stims([input_media])[0]
 
     if not isinstance(stim, AudioStim):
@@ -52,7 +52,7 @@ def clean_transcript(input_transcript, input_media):
                 _clean_save(el.text, new_file, el.onset, el.duration)
         else:  # Treat as a singe block of text
             txt = TextStim(input_transcript)
-            _clean_save(txt.text, new_file, 0, stim.duration)
+            _clean_save(txt.text, new_file, onset, stim.duration - onset)
 
     return clean_transcript, input_media
 
@@ -76,22 +76,25 @@ def parse_textgrid(transcript_path):
     return texts
 
 
-def run_fave(input_transcript, input_media, output_file):
+@click.command()
+@click.argument('input_transcript')
+@click.argument('input_media')
+@click.argument('output_file')
+@click.option('--onset', default=0,
+              help='Onset of first word. Only for .txt files.')
+def run_fave(input_transcript, input_media, output_file, onset):
     transcript, audio = clean_transcript(
-        input_transcript, input_media)
+        input_transcript, input_media, onset)
 
     text_grid = '/tmp/output.textGrid'
 
     bashCommand = "python2 FAAValign.py {} {} {}".format(
         audio, transcript, text_grid)
-    process = subprocess.call(bashCommand.split())
+    subprocess.call(bashCommand.split())
 
     stim = ComplexTextStim(elements=parse_textgrid(text_grid))
     stim.save(output_file)
 
 
 if __name__ == '__main__':
-    input_transcript = sys.argv[1]
-    input_media = sys.argv[2]
-    output_file = sys.argv[3]
-    run_fave(input_transcript, input_media, output_file)
+    run_fave()
