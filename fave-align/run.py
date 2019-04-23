@@ -85,8 +85,8 @@ def parse_textgrid(transcript_path):
 @click.argument('output_file')
 @click.option('--onset', default=None,
               help='Onset of first word. Only for .txt files.')
-@click.option('--onset', default=None,
-              help='Offset from the end of stimulus of last word. Only for .txt files.')
+@click.option('--offset', default=None,
+              help='Offset from the end of stimulus. Only for .txt files.')
 def run_fave(input_transcript, input_media, output_file,
              onset=None, offset=None):
     transcript, audio = clean_transcript(
@@ -94,7 +94,7 @@ def run_fave(input_transcript, input_media, output_file,
 
     text_grid = '/tmp/output.textGrid'
 
-    bashCommand = "python2 FAAValign.py {} {} {}".format(
+    bashCommand = "python2 FAAValign.py -n {} {} {}".format(
         audio, transcript, text_grid)
     subprocess.call(bashCommand.split())
 
