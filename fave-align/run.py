@@ -55,7 +55,7 @@ def clean_transcript(input_transcript, input_media, onset=None, offset=None):
             if onset is None or offset is None:
                 raise Exception("Onset and offset must be declared")
             txt = TextStim(input_transcript)
-            _clean_save(txt.text, new_file, onset, stim.duration - offset)
+            _clean_save(txt.text, new_file, onset, stim.duration - int(offset))
 
     return clean_transcript, input_media
 
