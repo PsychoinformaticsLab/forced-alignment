@@ -23,7 +23,8 @@ def _clean_save(filtered, new_file, onset, duration):
     if filtered == '':
         return
 
-    filtered = filtered.replace("\r\n\r\n", " ")
+    filtered = filtered.replace("\r", " ")
+    filtered = filtered.replace("\n", " ")
     filtered = filtered.replace("-", "")
 
     # Speaker is probably irrelevant, so just using Bob for now
@@ -32,7 +33,7 @@ def _clean_save(filtered, new_file, onset, duration):
                                               filtered))
 
 
-def clean_transcript(input_transcript, input_media, onset=0):
+def clean_transcript(input_transcript, input_media, onset=None, offset=None):
     stim = load_stims([input_media])[0]
 
     if not isinstance(stim, AudioStim):
@@ -51,8 +52,10 @@ def clean_transcript(input_transcript, input_media, onset=0):
             for el in txt.elements:
                 _clean_save(el.text, new_file, el.onset, el.duration)
         else:  # Treat as a singe block of text
+            if onset is None or offset is None:
+                raise Exception("Onset and offset must be declared")
             txt = TextStim(input_transcript)
-            _clean_save(txt.text, new_file, onset, stim.duration - onset)
+            _clean_save(txt.text, new_file, onset, stim.duration - offset)
 
     return clean_transcript, input_media
 
@@ -82,13 +85,16 @@ def parse_textgrid(transcript_path):
 @click.argument('output_file')
 @click.option('--onset', default=0,
               help='Onset of first word. Only for .txt files.')
-def run_fave(input_transcript, input_media, output_file, onset):
+@click.option('--offset', default=0,
+              help='Offset from the end of stimulus. Only for .txt files.')
+def run_fave(input_transcript, input_media, output_file,
+             onset=None, offset=None):
     transcript, audio = clean_transcript(
-        input_transcript, input_media, onset)
+        input_transcript, input_media, onset, offset)
 
     text_grid = '/tmp/output.textGrid'
 
-    bashCommand = "python2 FAAValign.py {} {} {}".format(
+    bashCommand = "python2 FAAValign.py -n {} {} {}".format(
         audio, transcript, text_grid)
     subprocess.call(bashCommand.split())
 
