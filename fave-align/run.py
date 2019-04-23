@@ -89,7 +89,7 @@ def parse_textgrid(transcript_path):
               help='Offset of last word. Only for .txt files.')
 def run_fave(input_transcript, input_media, output_file, onset, offset):
     transcript, audio = clean_transcript(
-        input_transcript, input_media, onset)
+        input_transcript, input_media, onset, offset)
 
     text_grid = '/tmp/output.textGrid'
 
