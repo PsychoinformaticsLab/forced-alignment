@@ -23,7 +23,8 @@ def _clean_save(filtered, new_file, onset, duration):
     if filtered == '':
         return
 
-    filtered = filtered.replace("\r\n\r\n", " ")
+    filtered = filtered.replace("\r", " ")
+    filtered = filtered.replace("\n", " ")
     filtered = filtered.replace("-", "")
 
     # Speaker is probably irrelevant, so just using Bob for now
