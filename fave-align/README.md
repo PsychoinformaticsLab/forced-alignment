@@ -1,6 +1,6 @@
 # How to use FAVE-align
 
-@## Make docker image
+### Make docker image
 `docker build . -t alignment`
 
 ### Run using Docker
