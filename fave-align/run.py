@@ -83,9 +83,9 @@ def parse_textgrid(transcript_path):
 @click.argument('input_transcript')
 @click.argument('input_media')
 @click.argument('output_file')
-@click.option('--onset', type=int,
+@click.option('--onset', default=0,
               help='Onset of first word. Only for .txt files.')
-@click.option('--offset', type=int,
+@click.option('--offset', default=0,
               help='Offset from the end of stimulus. Only for .txt files.')
 def run_fave(input_transcript, input_media, output_file,
              onset=None, offset=None):
