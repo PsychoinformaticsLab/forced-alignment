@@ -32,7 +32,8 @@ RUN sed "1650s/labid/labpr/" HTKLib/HRec.c > HRec_temp.c ; mv HRec_temp.c HTKLib
     make install
 
 RUN pip install --upgrade setuptools
-RUN pip install nltk==3.4.5 git+https://github.com/tyarkoni/pliers.git@1f4e58 contextlib2 click
+RUN pip install git+https://github.com/tyarkoni/pliers.git@1f4e58 contextlib2 click
+RUN pip install nltk==3.4.5
 RUN imageio_download_bin ffmpeg
 
 RUN git clone https://github.com/JoFrhwld/FAVE
