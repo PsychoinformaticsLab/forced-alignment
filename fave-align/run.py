@@ -47,7 +47,7 @@ def clean_transcript(input_transcript, input_media, onset=None, offset=None):
     clean_transcript = '/tmp/clean_transcript.txt'
     with open(clean_transcript, 'w') as new_file:
 
-        if extension == 'srt':
+        if extension == '.srt':
             txt = ComplexTextStim(input_transcript)
             for el in txt.elements:
                 _clean_save(el.text, new_file, el.onset, el.duration)
